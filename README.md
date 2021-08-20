@@ -2,8 +2,26 @@
 Convert log file into json or plain text file.
 
 ## How to
+
+### Basic usage
 ```
-$ python run.py <path/to/sourcefile.log> -t <target format> -o <output file>
+$ python logconvert.py <path/to/sourcefile.log>
+```
+### Full usage
+```
+$ python logconvert.py <path/to/sourcefile.log> -t <target format> -o <path/to/output/file>
+```
+### Make it executable
+
+```
+$ chmod +x logconvert.py
+$ cp logconvert.py /opt/
+$ ln -s /opt/logconvert.py /usr/bin/logconvert
+```
+
+### Basic usage
+```
+$ logconvert <path/to/sourcefile.log>
 ```
 
 ## Use Cases
@@ -20,6 +38,10 @@ $ python run.py <path/to/sourcefile.log> -t <target format> -o <output file>
 | 8. | None | *.json | ValueError | x |
 | 9. | None | *.txt | txt | dest_dir |
 
-
-src_dir: Source directory.  
+### Note
+src_dir: Source directory.
 dest_dir: Output destination directory.
+
+## Development Note
+
+This project demonstrates how to create CLI interface using Argparse in Python to convert logfiles to Json and Text. In terms of conversion of its content, it is not included in this scope because it requires an example of the contents of the logfile to be converted.

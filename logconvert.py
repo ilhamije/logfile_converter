@@ -44,10 +44,10 @@ def parse_args():
                     type=file_check(argparse.FileType(mode="r")),
                     help='*.log file only')
     p.add_argument('-t', '--target',
-                    help='-t <json|text>',
+                    help='select format target <json|text>',
                     choices=['text', 'json'])
     p.add_argument('-o', '--output',
-                    help='-o <path/to/output/file>',
+                    help='define output file',
                     type=argparse.FileType(mode="w"))
     args = p.parse_args()
     return args
