@@ -1,73 +1,47 @@
+import os
 import argparse
+import shutil
+import sys
 
-"""
-1. Convert *.log to json and text
-2. Contoh penggunaan:
-    - Mengkonversi menjadi file json
-    $ mytools /var/log/nginx/error.log -t json
-    - Mengkonversi menjadi file text
-    $ mytools /var/log/nginx/error.log -t text
-3. Default output is 'text'
-    mytools /var/log/nginx/error.log --> error.txt
-4. User juga bisa memilih dimana dia akan meletakan file output tersebut.
-    Dengan menggunakan flag -o.
-    $ mytools /var/log/nginx/error.log -o /User/johnmayer/Desktop/nginxlog.txt
-    $ mytools /var/log/nginx/error.log -t json -o /User/johnmayer/Desktop/nginxlog.json
-5. Help
-    Tools tersebut juga harus memiliki flag -h yang berfungsi menampilkan petunjuk penggunaanya.
-    $ mytools -h
+sys.tracebacklimit = 0
 
-"""
+
 def main(args):
+    """
+    CONVERSION
+    Get file path, parse it into path and filename.
+    STORING
+    Store as new_filename
+    Copy into GIVEN directory
+    """
+    src_dir = os.getcwd()
     args_dict = vars(args)
-    print(args_dict)
-    print('filename is: ', args_dict['file'])
-    print(target_ext(args_dict['target']))
-    print(output_dir(args_dict['output']))
 
-
-def target_ext(extname):
-    """
-    Convert file using selected format.
-    Use *.txt format as default.
-    """
-    if extname:
-        return 'convert selected format'
+    if args_dict['output']:
+        dest_dir = args_dict['output']
     else:
-        return 'convert into .txt'
+        dest_dir = src_dir
+
+    filename = args_dict['file'].name
+    pre, ext = os.path.splitext(filename)
+    a_target = args_dict['target']
+    a_output = args_dict['output']
+
+    do_convert(filename, pre, a_target, a_output, dest_dir)
 
 
-def output_dir(todir):
+def parse_args():
     """
-    Define output directory.
-    Use current directory as default.
+    Parse the given arguments.
+    Flag -t or --target : Define target format
+    Default : TEXT
+    Flag -o or --output : Define output file (and location)
+    Default directory: Same directory as source file.
+    Deefault file: *.txt
     """
-    if todir:
-        res = """
-        check if directory exist
-        if not, create dir
-        copy file into dir
-        """
-        return res
-    else:
-        res = """
-        use current directory of run.py
-        copy file to
-        """
-        return res
-
-def file_check(opener):
-    def ext_check(filename):
-        if not filename.lower().endswith('log'):
-            raise ValueError('*.log file only')
-        return opener(filename)
-    return ext_check
-
-
-if __name__ == '__main__':
     p = argparse.ArgumentParser()
     p.add_argument('file',
-                    type=file_check(argparse.FileType(mode="w")),
+                    type=file_check(argparse.FileType(mode="r")),
                     help='*.log file only')
     p.add_argument('-t', '--target',
                     help='-t <json|text>',
@@ -76,8 +50,58 @@ if __name__ == '__main__':
                     help='-o <path/to/output/file>',
                     type=argparse.FileType(mode="w"))
     args = p.parse_args()
+    return args
 
+
+def do_convert(filename, pre, a_target, a_output, dest_dir):
+    """
+    Converting and copying result into destination directory (dist_dir).
+    Based on Use Cases.
+    """
+    try:
+        if a_target:
+            if a_output:
+                if a_target.lower() == 'json':
+                    if a_output.name.lower().endswith('txt'):
+                        raise ValueError("Target and Extension didn't match.")
+                    else:
+                        dest_file = a_output.name
+                else:
+                    if a_output.name.lower().endswith('json'):
+                        raise ValueError("Target and Extension didn't match.")
+                    else:
+                        dest_file = dest_dir.name
+            else:
+                if a_target.lower() == 'json':
+                    dest_file = dest_dir + '/' + pre + '.json'
+                else:
+                    dest_file = dest_dir + '/' + pre + '.txt'
+
+        else:
+            # target is None
+            # so target is TEXT as default
+            if a_output:
+                if a_output.name.lower().endswith('json'):
+                    raise ValueError("Using default target (TEXT). But extension didn't matched.")
+                else:
+                    dest_file = dest_dir.name
+            else:
+                dest_file = dest_dir + '/' + pre + '.txt'
+    except Exception as e:
+        print(e)
+    else:
+        shutil.copy(filename, dest_file)
+
+
+def file_check(opener):
+    """ Check if input file is *.log """
+    def ext_check(filename):
+        if not filename.lower().endswith('log'):
+            raise ValueError('*.log file only')
+        return opener(filename)
+    return ext_check
+
+
+if __name__ == '__main__':
+    args = parse_args()
     main(args)
-
-    # with args.file.open('r') as file:
-    #     print(file.read())
