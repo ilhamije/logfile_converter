@@ -5,24 +5,26 @@ Convert log file into json or plain text file.
 
 ### Basic usage
 ```
-$ python logconvert.py <path/to/sourcefile.log>
+$ ./logconvert <path/to/sourcefile.log>
 ```
 ### Full usage
 ```
-$ python logconvert.py <path/to/sourcefile.log> -t <target format> -o <path/to/output/file>
-```
-### Make it executable
-
-```
-$ chmod +x logconvert.py
-$ cp logconvert.py /opt/
-$ ln -s /opt/logconvert.py /usr/bin/logconvert
+$ ./logconvert <path/to/sourcefile.log> -t <target format> -o <path/to/output/file>
 ```
 
-### Basic usage
+## Create Symbolic Link (optional)
+
+```
+$ sudo cp logconvert /opt/
+$ sudo ln -s /opt/logconvert /usr/bin/logconvert
+```
+
+### Basic Usage with the Symlink
 ```
 $ logconvert <path/to/sourcefile.log>
 ```
+
+<br >
 
 ## Use Cases
 
