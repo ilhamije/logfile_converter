@@ -41,7 +41,7 @@ $ logconvert <path/to/sourcefile.log>
 | 9. | None | *.txt | txt | dest_dir |
 
 ### Note
-src_dir: Source directory.
+src_dir: Source directory.  
 dest_dir: Output destination directory.
 
 ## Development Note
