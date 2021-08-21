@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+""" Convert *.log file into *.json or *.txt """
+
+__author__  = "Ilham Akbar"
+__email__ = "ilhamije@gmail.com"
+
 import os
 import argparse
 import shutil
